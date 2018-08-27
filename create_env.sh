@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Creates a .env file and exports the variables.
 
 ENV_FILE=".env"
@@ -11,10 +12,5 @@ else
     echo "ARTS_DATA_PATH=$ARTS_HOME/arts-xml-data/" >> $ENV_FILE
     echo "ARTS_BUILD_PATH=$ARTS_HOME/arts/build/" >> $ENV_FILE
     echo "ARTS_SRC_PATH=$ARTS_HOME/arts/" >> $ENV_FILE
-
-    export ARTS_INCLUDE_PATH=$ARTS_HOME/arts/controlfiles/
-    export ARTS_BUILD_PATH=$ARTS_HOME/arts/build/
-    export ARTS_DATA_PATH=$ARTS_HOME/arts-xml-data/
-    export ARTS_SRC_PATH=$ARTS_HOME/arts/
 fi
 
