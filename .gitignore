@@ -1,0 +1,25 @@
+
+.env
+.pytest_cache
+.idea
+
+*.swp
+~*
+
+# Typhon
+typhon
+typhon_examples
+
+# Arts
+arts/arts-xml-data
+arts/arts
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# JupyterNotebooks
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+

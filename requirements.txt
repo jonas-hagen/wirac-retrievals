@@ -1,0 +1,4 @@
+typhon
+pytest
+matplotlib
+numpy
