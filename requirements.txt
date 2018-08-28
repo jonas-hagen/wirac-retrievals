@@ -2,3 +2,4 @@ typhon
 pytest
 matplotlib
 numpy
+python-dotenv
