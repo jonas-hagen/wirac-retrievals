@@ -2,6 +2,8 @@
 .env
 .pytest_cache
 .idea
+*.egg-info
+Untitled.ipynb
 
 *.swp
 ~*
