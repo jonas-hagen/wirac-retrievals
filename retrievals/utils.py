@@ -2,6 +2,63 @@
 Some utils, mostly ported code from matlab.
 """
 import numpy as np
+from scipy import optimize
+
+
+def reduction_map(num_rows, num_cols, a=1, center=None):
+    if center is None:
+        center = num_cols//2
+
+    left_width = center
+    right_width = num_cols - left_width
+    M = int(max(left_width, right_width))
+    N = int(np.ceil(num_rows/2))
+
+    # Find r
+    def ser(r, i: int):
+        return np.ceil(a * r**i)
+
+    def seq(r, n: int):
+        c = 0
+        for i in range(n):
+            c += ser(r, i)
+        return c
+
+    # Find sign changing interval
+    upper = int(2)
+    while seq(upper, N) < M:
+        upper = upper * 2
+
+    r = optimize.brentq(lambda x: seq(x, N)-M, 1+1e-9, upper)
+
+    # Fill S
+    S = np.zeros((N, M))
+    for i in range(N-1):
+        start = int(seq(r, i))
+        stop = int(seq(r, i+1))
+        S[i, start:stop] = 1
+    S[i+1, stop:] = 1
+
+    # Construct full matrix
+    St = np.flipud(np.fliplr(S))
+    z = np.zeros_like(S)
+    Sfull = np.block([[St, z],
+                      [z, S]])
+
+    # If necessary, crop
+    if left_width > right_width:
+        # Crop right
+        Sfull = Sfull[:, :num_cols]
+    else:
+        # Crop left
+        Sfull = Sfull[:, -num_cols:]
+    Sfull = Sfull[Sfull.sum(axis=1) > 0, :]
+
+    # Normalize
+    row_sums = Sfull.sum(axis=1)
+    Snorm = Sfull / row_sums[:, np.newaxis]
+
+    return Snorm
 
 
 def exp_space(a, b, num, c=None, r=2):
