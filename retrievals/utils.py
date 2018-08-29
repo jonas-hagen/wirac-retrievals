@@ -6,6 +6,14 @@ from scipy import optimize
 
 
 def reduction_map(num_rows, num_cols, a=1, center=None):
+    """
+    Create a data reduction matrix using geometric series to determine bin width
+    :param num_rows: Number of data points that we want in the end.
+    :param num_cols: Number of measurements.
+    :param a: Irregularity parameter: 1 (more equally), 1e-9 more detail in the center
+    :param center: Point with most detail
+    :return: A matrix S that can be applied to data y_red = S*y
+    """
     if center is None:
         center = num_cols//2
 
@@ -33,10 +41,11 @@ def reduction_map(num_rows, num_cols, a=1, center=None):
 
     # Fill S
     S = np.zeros((N, M))
+    start = int(seq(r, 0))
     for i in range(N-1):
-        start = int(seq(r, i))
         stop = int(seq(r, i+1))
         S[i, start:stop] = 1
+        start = stop
     S[i+1, stop:] = 1
 
     # Construct full matrix
