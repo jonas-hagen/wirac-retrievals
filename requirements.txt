@@ -3,4 +3,5 @@ pytest
 matplotlib
 numpy
 python-dotenv
+pyproj
 -e .
