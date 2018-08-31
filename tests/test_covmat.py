@@ -21,7 +21,7 @@ def test_covmat_1d():
     cl = 2 * np.ones_like(x)
     cm = covmat.covmat_1d(x, sigma, cl, fname='exp', cutoff=0.02)
 
-    assert np.allclose(cm, reference, atol=0.02)
+    assert np.allclose(cm, reference, atol=0.0001)
 
 
 def test_covmat_1d_2():
@@ -34,9 +34,9 @@ def test_covmat_1d_2():
     x1 = np.arange(5)
     sigma1 = 0.3 * np.ones_like(x1)
     cl1 = 2 * np.ones_like(x1)
-    cm = covmat.covmat_1d(x1, sigma1, cl1, fname='exp', cutoff=0.02)
+    cm = covmat.covmat_1d(x1, sigma1, cl1, fname='exp', cutoff=0.02/(0.3**2))
 
-    assert np.allclose(cm, reference, atol=0.01)
+    assert np.allclose(cm, reference)
 
 
 def test_covmat_1d_sparse():
@@ -50,7 +50,6 @@ def test_covmat_1d_sparse():
     assert np.allclose(S1, S2.toarray())
 
 
-@pytest.mark.current
 def test_covmat_1d_sparse_2():
     x1 = np.arange(5)
     sigma1 = 0.3 * np.ones_like(x1)
@@ -63,3 +62,29 @@ def test_covmat_1d_sparse_2():
     S2 = covmat.covmat_1d_sparse(x1, sigma1, cl1, x2, sigma2, cl2, fname='lin', cutoff=0.02)
 
     assert np.allclose(S1, S2.toarray())
+
+
+def test_covmat_3d():
+    n1 = 3
+    n2 = 4
+    n3 = 5
+
+    x1 = np.arange(n1)
+    cl1 = 2 * np.ones_like(x1)
+    x2 = np.arange(n2)
+    cl2 = 2 * np.ones_like(x2)
+    x3 = np.arange(n3)
+    cl3 = 2 * np.ones_like(x3)
+    sigma = np.ones((n1, n2, n3))
+
+    S = covmat.covmat_3d(x1, cl1, 'lin',
+                         x2, cl2, 'lin',
+                         x3, cl3, 'lin',
+                         sigma)
+
+    # Check a few values known from Atmlab implementation
+    tol = 0.0001
+    assert np.isclose(S[4, 4], 1, atol=tol)
+    assert np.isclose(S[4, 7], 0.683939720585721, atol=tol)
+    assert np.isclose(S[19, 39], 0.172084269003133, atol=tol)
+    assert np.isclose(S[23, 54], 0.013038082601344, atol=tol)
